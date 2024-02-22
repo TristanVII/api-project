@@ -40,6 +40,8 @@ venv
 *.sqlite
 *.log
 python-client-generated
-docker-compose
 *.csv
 receiver/generate_fake_data.py
+
+.DS_Store
+
