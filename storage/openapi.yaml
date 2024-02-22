@@ -1,0 +1,167 @@
+---
+openapi: 3.0.0
+info:
+  title: Job Application Service
+  description: This API receives job listings and job application events
+  contact:
+    email: tdavis53@my.bcit.ca
+  version: 1.0.0
+servers:
+- url: /
+tags:
+- name: employers
+  description: Operations available to employers
+- name: applicants
+  description: Operations available to applicants
+paths:
+  /applications:
+      get:
+        summary: Summary
+        operationId: app.get_applications
+        description: Returns a list of job applications
+        parameters:
+          - name: start_timestamp
+            in: query
+            description: Specifies the start time
+            schema:
+              type: string
+              format: date-time
+              example: 2016-08-29T09:12:33.001Z
+          - name: end_timestamp
+            in: query
+            description: Specifies the end time
+            schema:
+              type: string
+              format: date-time
+              example: 2016-08-29T09:12:33.001Z
+        responses:
+          '201':
+            description: 'succes'
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/JobApplication'
+          '400':
+            description: 'Invalid request'
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:   
+                    message:
+                      type: string
+            
+  /jobs:
+    get:
+      summary: Summary
+      operationId: app.get_jobs
+      description: Returns a list of jobs
+      parameters:
+        - name: start_timestamp
+          in: query
+          description: Specifies the start time
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+        - name: end_timestamp
+          in: query
+          description: Specifies the end time
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+      responses:
+        '201':
+          description: 'succes'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobListing'
+
+        '400':
+          description: 'Invalid request'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:   
+                  message:
+                    type: string
+
+components:
+  schemas:
+    JobListing:
+      required:
+      - date
+      - job_listing_id
+      - location
+      - salary
+      - sector
+      - title
+      - trace_id
+      type: object
+      properties:
+        trace_id:
+          type: string
+          example: '1706830182723632000'
+        job_listing_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        sector:
+          type: string
+          example: Technology
+        title:
+          type: string
+          example: Web Developer
+        salary:
+          type: integer
+        location:
+          type: string
+          example: Vancouver
+        date:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    JobApplication:
+      required:
+      - age
+      - date
+      - gender
+      - job_application_id
+      - job_listing_id
+      - years_of_experience
+      type: object
+      properties:
+        trace_id:
+          type: string
+          example: '1706830182723632000'
+        job_application_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0852
+        job_listing_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        age:
+          type: integer
+          example: 22
+        gender:
+          type: string
+          example: Male
+          enum:
+          - Male
+          - Female
+        years_of_experience:
+          type: integer
+          example: 2
+        date:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z

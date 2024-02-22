@@ -1,0 +1,117 @@
+---
+openapi: 3.0.0
+info:
+  title: Job Application Service
+  description: This API receives job listings and job application events
+  contact:
+    email: tdavis53@my.bcit.ca
+  version: 1.0.0
+servers:
+- url: /
+tags:
+- name: employers
+  description: Operations available to employers
+- name: applicants
+  description: Operations available to applicants
+paths:
+  /job/create:
+    post:
+      tags:
+      - employers
+      summary: creates a new job listing
+      description: Adds a job to the system
+      operationId: app.add_job_listing
+      requestBody:
+        description: Job listing to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobListing'
+      responses:
+        "201":
+          description: job listing created
+        "400":
+          description: "invalid input, object invalid"
+  /job/application:
+    post:
+      tags:
+      - applicants
+      summary: reports a job application made for a job listing
+      description: Adds an job application to the system
+      operationId: app.add_job_application
+      requestBody:
+        description: Job application to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobApplication'
+      responses:
+        "201":
+          description: job application created
+        "400":
+          description: "invalid input, object invalid"
+components:
+  schemas:
+    JobListing:
+      required:
+      - date
+      - job_listing_id
+      - location
+      - salary
+      - sector
+      - title
+      type: object
+      properties:
+        job_listing_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        sector:
+          type: string
+          example: Technology
+        title:
+          type: string
+          example: Web Developer
+        salary:
+          type: integer
+        location:
+          type: string
+          example: Vancouver
+        date:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+    JobApplication:
+      required:
+      - age
+      - date
+      - gender
+      - job_application_id
+      - job_listing_id
+      - years_of_experience
+      type: object
+      properties:
+        job_application_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0852
+        job_listing_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        age:
+          type: integer
+          example: 22
+        gender:
+          type: string
+          example: Male
+          enum:
+          - Male
+          - Female
+        years_of_experience:
+          type: integer
+          example: 2
+        date:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z

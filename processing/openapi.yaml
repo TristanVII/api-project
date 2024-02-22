@@ -1,0 +1,58 @@
+---
+openapi: 3.0.0
+info:
+  title: Job Application Service
+  description: This API receives job listings and job application events
+  contact:
+    email: tdavis53@my.bcit.ca
+  version: 1.0.0
+servers:
+- url: /
+paths:
+ /stats:
+  get:
+    summary: Gets the job stats
+    operationId: app.get_stats
+    description: Gets Job Applications and Job Listings statistics
+    responses:
+      '200':
+        description: Successfully returned a stats
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                $ref: '#/components/schemas/Stats'
+      '400':
+        description: Invalid request
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+
+components:
+  schemas:
+    Stats:
+      required:
+        - num_jobs
+        - num_applications
+        - average_salary
+        - max_experience
+      properties:
+        num_jobs:
+          type: integer
+          example: 500000
+        num_applications:
+          type: integer
+          example: 200000
+        average_salary:
+          type: integer
+          example: 180000
+        max_experience:
+          type: integer
+          example: 5
+      type: object
+

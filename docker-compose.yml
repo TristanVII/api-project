@@ -1,0 +1,16 @@
+services:
+  db:
+    image: mariadb:10.6.4-focal
+    volumes:
+      - jobsdb_data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=jobsdb
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    ports:
+      - "3306:3306"
+volumes:
+  jobsdb_data:
+

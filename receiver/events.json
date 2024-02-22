@@ -1,0 +1,48 @@
+{
+    "num_job_listing": 102,
+    "recent_job_listing": [
+        {
+            "received_timestamp": "2024-01-25 13:19:06.926709",
+            "msg_data": "Job in Vancouver with as salary of 0 was listed"
+        },
+        {
+            "received_timestamp": "2024-01-25 13:03:32.030687",
+            "msg_data": "Job in Montreal with as salary of 26218 was listed"
+        },
+        {
+            "received_timestamp": "2024-01-25 13:03:32.029481",
+            "msg_data": "Job in Toronto with as salary of 164488 was listed"
+        },
+        {
+            "received_timestamp": "2024-01-25 13:03:32.028294",
+            "msg_data": "Job in Vancouver with as salary of 106555 was listed"
+        },
+        {
+            "received_timestamp": "2024-01-25 13:03:32.026970",
+            "msg_data": "Job in Vancouver with as salary of 182699 was listed"
+        }
+    ],
+    "num_job_application": 100,
+    "recent_job_application": [
+        {
+            "received_timestamp": "2024-01-25 13:03:32.031322",
+            "msg_data": "A person of age 54 applied with 2 yoe"
+        },
+        {
+            "received_timestamp": "2024-01-25 13:03:32.030081",
+            "msg_data": "A person of age 35 applied with 6 yoe"
+        },
+        {
+            "received_timestamp": "2024-01-25 13:03:32.028870",
+            "msg_data": "A person of age 20 applied with 6 yoe"
+        },
+        {
+            "received_timestamp": "2024-01-25 13:03:32.027673",
+            "msg_data": "A person of age 22 applied with 0 yoe"
+        },
+        {
+            "received_timestamp": "2024-01-25 13:03:32.026197",
+            "msg_data": "A person of age 45 applied with 4 yoe"
+        }
+    ]
+}
