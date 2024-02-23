@@ -104,3 +104,4 @@ if __name__ == "__main__":
     create_database()
     init_scheduler(populate_stats, TIME)
     app.run(port=8100)
+    print("processing service closed...")

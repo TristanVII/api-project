@@ -150,3 +150,4 @@ if __name__ == "__main__":
     t1.start()
     LOGGER.info("app running")
     app.run(port=8090)
+    print('storage service closed...')
