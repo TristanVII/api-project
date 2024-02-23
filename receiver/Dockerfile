@@ -14,4 +14,4 @@ EXPOSE 8080
 
 
 # Start instructions (adjust if needed)
-CMD ["py", "app.py"] 
+CMD ["python3", "app.py"] 
