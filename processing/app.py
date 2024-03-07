@@ -9,6 +9,8 @@ from models import Stats
 from process import process_jobs, process_applications
 from schedular import init_scheduler
 from sqlalchemy.orm import Session
+from connexion.middleware import MiddlewarePosition
+from starlette.middleware.cors import CORSMiddleware
 
 _, TIME, EVENT_STORE_URL = load_app_conf()
 LOGGER = load_log_conf()
@@ -97,6 +99,14 @@ def read_stats(full):
 
 # Your functions here
 app = FlaskApp(__name__, specification_dir='')
+app.add_middleware(
+    CORSMiddleware,
+    position=MiddlewarePosition.BEFORE_EXCEPTION,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
 
 

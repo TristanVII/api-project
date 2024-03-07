@@ -6,6 +6,8 @@ import datetime
 import json
 from connexion import FlaskApp, NoContent
 from load_configs import load_log_conf, load_app_conf
+from connexion.middleware import MiddlewarePosition
+from starlette.middleware.cors import CORSMiddleware
 
 
 LOGGER = load_log_conf()
@@ -53,6 +55,14 @@ def get_job(index):
 
 # Your functions here
 app = FlaskApp(__name__, specification_dir='')
+app.add_middleware(
+    CORSMiddleware,
+    position=MiddlewarePosition.BEFORE_EXCEPTION,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
 
 

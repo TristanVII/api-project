@@ -151,3 +151,6 @@ if __name__ == "__main__":
     LOGGER.info("app running")
     app.run(host="0.0.0.0", port=8090)
     print('storage service closed...')
+
+
+# write a storage
