@@ -110,7 +110,7 @@ def process_messages():
     hostname = "%s:%d" % (
         KAFKA_HOSTNAME, KAFKA_PORT)
 
-    client = KafkaClient(hosts=hostname)
+    client = KafkaClient(hosts=hostname, socket_timeout_ms=10000)
 
     topic = client.topics[str.encode(KAFKA_TOPIC)]
 
