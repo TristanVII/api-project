@@ -24,6 +24,8 @@ def add_job_listing(body):
     """ Receives a job listing event """
     trace_id = body['trace_id']
 
+    curr_time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    LOGGER.info(f'Added job event at {curr_time}')
     job_listing = JobListing(
         job_listing_id=body['job_listing_id'],
         title=body['title'],
@@ -31,7 +33,7 @@ def add_job_listing(body):
         salary=body['salary'],
         sector=body['sector'],
         date=datetime.fromisoformat(body['date']),
-        date_created=datetime.now(),
+        date_created=curr_time,
         trace_id=body['trace_id']
     )
 
@@ -47,6 +49,8 @@ def add_job_application(body):
     """ Receives a job application event """
     trace_id = body['trace_id']
 
+    curr_time = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    LOGGER.info(f'Added application event at {curr_time}')
     job_application = JobApplication(
         job_application_id=body['job_application_id'],
         job_listing_id=body['job_listing_id'],
@@ -54,7 +58,7 @@ def add_job_application(body):
         age=body['age'],
         years_of_experience=body['years_of_experience'],
         date=datetime.fromisoformat(body['date']),
-        date_created=datetime.now(),
+        date_created=curr_time,
         trace_id=body['trace_id']
     )
 

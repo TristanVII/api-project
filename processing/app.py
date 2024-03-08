@@ -90,6 +90,7 @@ def read_stats(full):
     with Session(engine) as session:
         result = session.query(Stats).order_by(
             Stats.last_updated.desc()).first()
+    LOGGER.info(f'Read stats {result}')
     if not result:
         old = datetime.now() - timedelta(10.0)
         return {'num_jobs': 0, 'num_applications': 0, 'average_salary': 0, 'max_experience': 0, 'last_updated': old}
