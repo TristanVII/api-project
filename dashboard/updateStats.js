@@ -1,10 +1,10 @@
 /* UPDATE THESE VALUES TO MATCH YOUR SETUP */
 
 const EC2_IP = "http://ec2-44-232-43-222.us-west-2.compute.amazonaws.com";
-const STATS_API_URL = `${EC2_IP}/:8110/stats`;
+const STATS_API_URL = `${EC2_IP}:8100/stats`;
 const EVENTS_URL = {
-  jobs: `${EC2_IP}:8090/jobs`,
-  applications: `${EC2_IP}:8090/application`,
+  jobs: `${EC2_IP}:8110/job`,
+  applications: `${EC2_IP}:8110/application`,
 };
 
 // This function fetches and updates the general statistics
@@ -21,11 +21,8 @@ const getStats = (statsUrl) => {
 };
 
 // This function fetches a single event from the audit service
-const getEvent = (eventType) => {
-  const eventIndex = Math.floor(Math.random() * 1000);
-  // const eventIndex = 999999
-
-  fetch(`${EVENTS_URL[eventType]}?index=${eventIndex}`)
+const getEvent = (eventType, index) => {
+  fetch(`${EVENTS_URL[eventType]}?index=${index}`)
     .then((res) => {
       if (!res.ok) {
         throw new Error(`Error: status code ${res.status}`);
@@ -34,11 +31,11 @@ const getEvent = (eventType) => {
     })
     .then((result) => {
       console.log("Received event", result);
-      updateEventHTML({ ...result, index: eventIndex }, eventType);
+      updateEventHTML({ ...result, index: index }, eventType);
     })
     .catch((error) => {
       updateEventHTML(
-        { error: error.message, index: eventIndex },
+        { error: error.message, index: index },
         eventType,
         (error = true)
       );
@@ -90,17 +87,16 @@ const updateStatsHTML = (data, error = false) => {
 };
 
 const setup = () => {
+  let index = 1;
   const interval = setInterval(() => {
     getStats(STATS_API_URL);
-    getEvent("jobs");
-    getEvent("applications");
+    getEvent("jobs", index);
+    getEvent("applications", index);
+    index++;
   }, 5000); // Update every 5 seconds
 
   // initial call
   getStats(STATS_API_URL);
-  getEvent("jobs");
-  getEvent("applications");
-  // clearInterval(interval);
 };
 
 document.addEventListener("DOMContentLoaded", setup);
