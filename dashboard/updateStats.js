@@ -1,9 +1,10 @@
 /* UPDATE THESE VALUES TO MATCH YOUR SETUP */
 
-const STATS_API_URL = "http://localhost:8110/stats";
+const EC2_IP = "http://ec2-44-232-43-222.us-west-2.compute.amazonaws.com";
+const STATS_API_URL = `${EC2_IP}/:8110/stats`;
 const EVENTS_URL = {
-  jobs: "http://localhost:8090/jobs",
-  applications: "http://localhost:8090/application",
+  jobs: `${EC2_IP}:8090/jobs`,
+  applications: `${EC2_IP}:8090/application`,
 };
 
 // This function fetches and updates the general statistics
