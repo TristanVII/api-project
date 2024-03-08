@@ -12,6 +12,7 @@ from pykafka.common import OffsetType
 from db_conf import load_app_conf
 from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
+import time
 
 LOGGER = load_log_conf()
 CONFIG = load_app_conf()
@@ -109,8 +110,12 @@ def process_messages():
 
     hostname = "%s:%d" % (
         KAFKA_HOSTNAME, KAFKA_PORT)
+    client = None
 
-    client = KafkaClient(hosts=hostname, socket_timeout_ms=10000)
+    while not client:
+        LOGGER.info("Storage connecting to kafka...")
+        client = KafkaClient(hosts=hostname)
+        time.sleep(5)
 
     topic = client.topics[str.encode(KAFKA_TOPIC)]
 
