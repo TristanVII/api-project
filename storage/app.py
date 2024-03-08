@@ -113,9 +113,12 @@ def process_messages():
     client = None
 
     while not client:
-        LOGGER.info("Storage connecting to kafka...")
-        client = KafkaClient(hosts=hostname)
-        time.sleep(5)
+        try:
+            LOGGER.info("Storage connecting to kafka...")
+            client = KafkaClient(hosts=hostname)
+        except:
+            client = None
+            time.sleep(5)
 
     topic = client.topics[str.encode(KAFKA_TOPIC)]
 
