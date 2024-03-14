@@ -3,36 +3,44 @@
 
 <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="./style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="ACIT3855 statistics application" />
-    <script src="/updateStats.js"></script>
+    <script src="./updateStats.js"></script>
     <title>ACIT3855 - CHANGETHIS</title>
 </head>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    </head>
 <body>
+    <header>
+        <img src="./image.png" alt="Logo" id="logo" />
+        <h1>Jobs Statistics</h1>
+    </header>
     <main id="main">
-        <div id="header">
-            <img src="/image.png" alt="Logo" id="logo" />
-            <h1>Snow statistics</h1>
-        </div>
-        <div id="stats">
-
-        </div>
-        <div id="events">
+        <section id="controls">
+            <h2>Event Index</h2> 
+            <input type="number" id="eventIndex" min="1" value="1">
+            <button id="fetchEventButton">Fetch Event</button>
+        </section> 
+        <section id="stats"> 
+        </section>
+        <section id="events">
             <div>
                 <h3>Jobs event</h3>
-                <div id="event-jobs">
-                </div>
+                <div id="event-jobs"></div>
             </div>
             <div>
                 <h3>Application event</h3>
-                <div id="event-applications">
-                </div>
+                <div id="event-applications"></div>
             </div>
-        </div>
+        </section>
     </main>
 </body>
+</html>
+
 
 </html>
