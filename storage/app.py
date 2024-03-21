@@ -120,7 +120,7 @@ def process_messages():
             LOGGER.info("Storage connecting to kafka...")
             client = KafkaClient(hosts=hostname)
         except:
-            LOGGER.error("Failed to connect to kafka. Retry attempt ", retry)
+            LOGGER.error(f"Failed to connect to kafka. Retry attempt {retry}")
             retry += 1
             client = None
             time.sleep(KAFKA_DELAY)
