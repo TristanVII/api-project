@@ -23,6 +23,8 @@ def load_app_conf():
             'DB': datastore['db'],
             'KAFKA_SERVER': events['hostname'],
             'KAFKA_PORT': events['port'],
-            'KAFKA_TOPIC': events['topic']
+            'KAFKA_TOPIC': events['topic'],
+            'KAFKA_RETRIES': events['max_tries'],
+            'KAFKA_DELAY': events['delay']
         }
     return config_dict

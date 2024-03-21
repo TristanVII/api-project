@@ -19,6 +19,8 @@ CONFIG = load_app_conf()
 KAFKA_HOSTNAME = CONFIG['KAFKA_SERVER']
 KAFKA_PORT = CONFIG['KAFKA_PORT']
 KAFKA_TOPIC = CONFIG['KAFKA_TOPIC']
+KAFKA_RETRIES = CONFIG['KAFKA_RETRIES']
+KAFKA_DELAY = CONFIG['KAFKA_DELAY']
 
 
 def add_job_listing(body):
@@ -112,13 +114,21 @@ def process_messages():
         KAFKA_HOSTNAME, KAFKA_PORT)
     client = None
 
-    while not client:
+    retry = 1
+    while not client and retry < KAFKA_RETRIES:
         try:
             LOGGER.info("Storage connecting to kafka...")
             client = KafkaClient(hosts=hostname)
         except:
+            LOGGER.error("Failed to connect to kafka. Retry attempt ", retry)
+            retry += 1
             client = None
-            time.sleep(5)
+            time.sleep(KAFKA_DELAY)
+
+    if not client:
+        LOGGER.error(
+            f'Failed to connect to Kafka client after {retry} retries.')
+        exit(1)
 
     topic = client.topics[str.encode(KAFKA_TOPIC)]
 

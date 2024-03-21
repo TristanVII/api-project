@@ -9,3 +9,5 @@ events:
   hostname: ec2-44-232-43-222.us-west-2.compute.amazonaws.com
   port: 9092
   topic: events
+  max_tries: 10
+  delay: 5

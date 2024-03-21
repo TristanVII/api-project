@@ -30,13 +30,8 @@ def add_job_listing(body):
         f'Received event "{event_name}" request with a trace id of {trace_id}')
 
     body['trace_id'] = str(trace_id)
-    # r = requests.post(CREATE_URL,
-    #                   json=body, headers=header)
 
     print("KAFKA")
-    # client = KafkaClient(hosts=f'{KAFKA_SERVER}:{KAFKA_PORT}')
-    # topic = client.topics[str.encode(KAFKA_TOPIC)]
-    # producer = topic.get_sync_producer()
 
     msg = {"type": "job_create",
            "datetime":
@@ -62,13 +57,6 @@ def add_job_application(body):
         f'Received event "{event_name}" request with a trace id of {trace_id}')
 
     body['trace_id'] = str(trace_id)
-    # r = requests.post(APPLICATION_URL,
-    #                   json=body, headers=header)
-
-    # client = KafkaClient(hosts=f'{KAFKA_SERVER}:{KAFKA_PORT}')
-    # topic = client.topics[str.encode(KAFKA_TOPIC)]
-    # producer = topic.get_sync_producer()
-
     msg = {"type": "job_application",
            "datetime":
            datetime.datetime.now().strftime(
