@@ -15,7 +15,7 @@ KAFKA_PORT = CONFIG['KAFKA_PORT']
 KAFKA_TOPIC = CONFIG['KAFKA_TOPIC']
 LOGGER = load_log_conf()
 
-client = KafkaClient(hosts=f'kafka:{KAFKA_PORT}')
+client = KafkaClient(hosts=f'{KAFKA_SERVER}:{KAFKA_PORT}')
 topic = client.topics[str.encode(KAFKA_TOPIC)]
 producer = topic.get_sync_producer()
 

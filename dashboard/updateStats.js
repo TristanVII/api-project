@@ -1,6 +1,5 @@
 /* UPDATE THESE VALUES TO MATCH YOUR SETUP */
-
-const EC2_IP = "http://ec2-44-232-43-222.us-west-2.compute.amazonaws.com";
+const EC2_IP = process.env.EC2_IP;
 const STATS_API_URL = `${EC2_IP}:8100/stats`;
 const EVENTS_URL = {
   jobs: `${EC2_IP}:8110/job`,
@@ -31,7 +30,7 @@ const getStats = (statsUrl) => {
       updateStatsHTML(result);
     })
     .catch((error) => {
-      updateStatsHTML(error.message, (error = true));
+      updateStatsHTML(error.message, error = true);
     });
 };
 
@@ -52,7 +51,7 @@ const getEvent = (eventType, index) => {
       updateEventHTML(
         { error: error.message, index: index },
         eventType,
-        (error = true)
+        error = true,
       );
     });
 };

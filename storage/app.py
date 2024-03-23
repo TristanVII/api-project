@@ -146,20 +146,23 @@ def process_messages():
 
         payload = msg["payload"]
 
-        if msg["type"] == "job_application":
-            LOGGER.debug(f"Processing job_application: {payload}")
-            add_job_application(payload)
-        elif msg["type"] == "job_create":
-            LOGGER.debug(f"Processing job_application: {payload}")
-            add_job_listing(payload)
-        else:
-            LOGGER.error(
-                "Message is not of type job_application or job_create")
+        try:
 
-        consumer.commit_offsets()
+            if msg["type"] == "job_application":
+                LOGGER.debug(f"Processing job_application: {payload}")
+                add_job_application(payload)
+            elif msg["type"] == "job_create":
+                LOGGER.debug(f"Processing job_application: {payload}")
+                add_job_listing(payload)
+            else:
+                LOGGER.error(
+                    "Message is not of type job_application or job_create")
+
+            consumer.commit_offsets()
+        except (e):
+            LOGGER.error(f"Error connecting to mysql to add {payload}")
 
 
-# Your functions here
 app = FlaskApp(__name__, specification_dir='')
 app.add_middleware(
     CORSMiddleware,
@@ -182,7 +185,3 @@ if __name__ == "__main__":
     t1.start()
     LOGGER.info("app running")
     app.run(host="0.0.0.0", port=8090)
-    print('storage service closed...')
-
-
-# write a storage
