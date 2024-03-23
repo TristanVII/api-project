@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
+import json
+import time
 from uuid import uuid4
 import connexion
+from pykafka import KafkaClient
 import requests
 from connexion import FlaskApp
 from load_configs import load_app_conf, load_log_conf
@@ -12,8 +15,54 @@ from sqlalchemy.orm import Session
 from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
 
-_, TIME, EVENT_STORE_URL = load_app_conf()
+CONFIG = load_app_conf
+TIME = CONFIG['TIME']
+EVENT_STORE_URL = CONFIG['URL']
+KAFKA_HOSTNAME = CONFIG['KAFKA_SERVER']
+KAFKA_PORT = CONFIG['KAFKA_PORT']
+KAFKA_TOPIC = CONFIG['KAFKA_TOPIC']
+KAFKA_TRIES = CONFIG['KAFKA_RETRIES']
+KAFKA_DELAY = CONFIG['KAFKA_DELAY']
+KAFKA_EVENT_LOG = CONFIG['KAFKA_EVENT_LOG']
+KAFKA_EVENT_COUNT = CONFIG['KAFKA_EVENT_COUNT']
 LOGGER = load_log_conf()
+
+
+client = None
+tries = 0
+
+while tries < KAFKA_TRIES and not client:
+    try:
+        LOGGER.info("Storage connecting to kafka...")
+        client = KafkaClient(hosts=KAFKA_HOSTNAME)
+        tries += 1
+
+    except:
+        LOGGER.error(f"Failed to connect to kafka. Rety attempt {tries}")
+        client = None
+        time.sleep(KAFKA_DELAY)
+
+if not client:
+    LOGGER.error(
+        f'Failed to connect to Kafka client after {tries} retries.')
+    exit(1)
+
+LOGGER.info("Succesfully connected to Kafka")
+topic = client.topics[str.encode(KAFKA_EVENT_LOG)]
+producer = topic.get_sync_producer()
+
+
+def send_message(code, payload):
+    msg = {"code": code,
+           "datetime":
+           datetime.datetime.now().strftime(
+               "%Y-%m-%dT%H:%M:%S"),
+           "payload": payload}
+    msg_str = json.dumps(msg)
+    producer.produce(msg_str.encode('utf-8'))
+
+
+send_message("0003", "Succesfully connected to Kafka")
 
 
 def get_stats():
@@ -47,8 +96,16 @@ def fetch_and_process_data():
     jobs_data = jobs_request.json()
     application_data = applications_request.json()
 
+    num_jobs_data = len(jobs_data)
+    num_application_data = len(application_data)
     LOGGER.info(
-        f'Received {len(jobs_data)} job events and {len(application_data)} application events')
+        f'Received {num_jobs_data} job events and {num_application_data} application events')
+
+    if num_jobs_data >= KAFKA_EVENT_COUNT:
+        send_message("0004", f"Received {num_jobs_data} job data")
+    if num_application_data >= KAFKA_EVENT_COUNT:
+        send_message(
+            "0004", f"Received {num_application_data} job applications")
 
     # updates data inplace
     process_jobs(jobs_data, data)

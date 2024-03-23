@@ -13,11 +13,41 @@ APPLICATION_URL = CONFIG['job_application_url']
 KAFKA_SERVER = CONFIG['KAFKA_SERVER']
 KAFKA_PORT = CONFIG['KAFKA_PORT']
 KAFKA_TOPIC = CONFIG['KAFKA_TOPIC']
+KAFKA_TRIES = CONFIG['KAFKA_TRIES']
+KAFKA_DELAY = CONFIG['KAFKA_DELAY']
+KAFKA_EVENT_LOG = CONFIG['KAFKA_EVENT_LOG']
+KAFKA_HOST = f'{KAFKA_SERVER}:{KAFKA_PORT}'
 LOGGER = load_log_conf()
 
-client = KafkaClient(hosts=f'{KAFKA_SERVER}:{KAFKA_PORT}')
-topic = client.topics[str.encode(KAFKA_TOPIC)]
+client = None
+tries = 0
+
+while tries < KAFKA_TRIES and not client:
+    try:
+        LOGGER.info("Storage connecting to kafka...")
+        client = KafkaClient(hosts=KAFKA_HOST)
+        tries += 1
+
+    except:
+        LOGGER.error(f"Failed to connect to kafka. Rety attempt {tries}")
+        client = None
+        time.sleep(KAFKA_DELAY)
+
+if not client:
+    LOGGER.error(
+        f'Failed to connect to Kafka client after {tries} retries.')
+    exit(1)
+
+LOGGER.info("Succesfully connected to Kafka")
+topic = client.topics[str.encode(KAFKA_EVENT_LOG)]
 producer = topic.get_sync_producer()
+msg = {"code": "0001",
+       "datetime":
+       datetime.datetime.now().strftime(
+           "%Y-%m-%dT%H:%M:%S"),
+       "payload": "Succesfully connected to Kafka"}
+msg_str = json.dumps(msg)
+producer.produce(msg_str.encode('utf-8'))
 
 
 def add_job_listing(body):

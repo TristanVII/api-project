@@ -12,11 +12,20 @@ def load_app_conf():
     """
     with open('app_conf.yml', 'r') as f:
         app_config = yaml.safe_load(f.read())
-        database = app_config['datastore']['filename']
-        schedular = app_config['scheduler']['period_sec']
-        url = app_config['eventstore']['url']
+        events = app_config['events']
 
-    return database, schedular, url
+        return {
+            'DATABASE': app_config['datastore']['filename'],
+            'TIME': app_config['scheduler']['period_sec'],
+            'URL': app_config['eventstore']['url'],
+            'KAFKA_SERVER': events['hostname'],
+            'KAFKA_PORT': events['port'],
+            'KAFKA_TOPIC': events['topic'],
+            'KAFKA_RETRIES': events['max_tries'],
+            'KAFKA_DELAY': events['delay'],
+            'KAFKA_EVENT_LOG': events['event_log'],
+            'KAFKA_EVENT_COUNT': events['event_count']
+        }
 
 
 def load_log_conf():

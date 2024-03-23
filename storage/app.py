@@ -21,6 +21,7 @@ KAFKA_PORT = CONFIG['KAFKA_PORT']
 KAFKA_TOPIC = CONFIG['KAFKA_TOPIC']
 KAFKA_RETRIES = CONFIG['KAFKA_RETRIES']
 KAFKA_DELAY = CONFIG['KAFKA_DELAY']
+KAFKA_EVENT_LOG = CONFIG['KAFKA_EVENT_LOG']
 
 
 def add_job_listing(body):
@@ -130,11 +131,22 @@ def process_messages():
             f'Failed to connect to Kafka client after {retry} retries.')
         exit(1)
 
+    LOGGER.info("Succesfully connected to Kafka")
+
     topic = client.topics[str.encode(KAFKA_TOPIC)]
 
     consumer = topic.get_simple_consumer(consumer_group=b'event_group',
                                          reset_offset_on_start=False,
                                          auto_offset_reset=OffsetType.LATEST)
+
+    producer = topic.get_sync_producer()
+    msg = {"code": "0002",
+           "datetime":
+           datetime.datetime.now().strftime(
+               "%Y-%m-%dT%H:%M:%S"),
+           "payload": "Ready to receive messages"}
+    msg_str = json.dumps(msg)
+    producer.produce(msg_str.encode('utf-8'))
 
     for msg in consumer:
 
@@ -159,7 +171,7 @@ def process_messages():
                     "Message is not of type job_application or job_create")
 
             consumer.commit_offsets()
-        except (e):
+        except:
             LOGGER.error(f"Error connecting to mysql to add {payload}")
 
 

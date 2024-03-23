@@ -25,6 +25,7 @@ def load_app_conf():
             'KAFKA_PORT': events['port'],
             'KAFKA_TOPIC': events['topic'],
             'KAFKA_RETRIES': events['max_tries'],
-            'KAFKA_DELAY': events['delay']
+            'KAFKA_DELAY': events['delay'],
+            'KAFKA_EVENT_LOG': events['event_log']
         }
     return config_dict
