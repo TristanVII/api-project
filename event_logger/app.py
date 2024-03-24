@@ -2,11 +2,9 @@ import time
 import uuid
 import connexion
 from datetime import datetime
-from pykafka import KafkaClient
 import json
 from threading import Thread
 from connexion import FlaskApp
-from pykafka.common import OffsetType
 from sqlalchemy import func
 from load_configs import load_log_conf, load_app_conf
 from create_database import create_database, engine
@@ -14,6 +12,7 @@ from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from models import Event
+from kafka_client import Kafka
 
 
 LOGGER = load_log_conf()
@@ -53,7 +52,7 @@ def write_message(msg):
         date=time
     )
     LOGGER.info(
-        f"Received message: {event.code} - {event.message} - {event.date}")
+        f"Event: {event.code} - {event.message} - {event.date}")
     with Session(engine) as session:
         session.add(event)
         session.commit()
@@ -64,40 +63,16 @@ def write_message(msg):
 def process_messages():
     """ Process event messages """
 
-    hostname = "%s:%d" % (
-        KAFKA_HOST, KAFKA_PORT)
-    client = None
+    kafka = Kafka(KAFKA_HOST, KAFKA_PORT,
+                  LOGGER, KAFKA_TRIES, KAFKA_DELAY)
 
-    retry = 1
-    while not client and retry < KAFKA_TRIES:
-        try:
-            LOGGER.info("Storage connecting to kafka...")
-            client = KafkaClient(hosts=hostname)
-        except:
-            LOGGER.error(f"Failed to connect to kafka. Retry attempt {retry}")
-            retry += 1
-            client = None
-            time.sleep(KAFKA_DELAY)
-
-    if not client:
-        LOGGER.error(
-            f'Failed to connect to Kafka client after {retry} retries.')
-        exit(1)
-
-    LOGGER.info("Succesfully connected to Kafka")
-
-    topic = client.topics[str.encode(KAFKA_EVENT_LOG)]
-
-    consumer = topic.get_simple_consumer(consumer_group=b'event_group',
-                                         reset_offset_on_start=False,
-                                         auto_offset_reset=OffsetType.LATEST)
+    consumer = kafka.get_consumer(KAFKA_EVENT_LOG)
 
     for msg in consumer:
         msg_str = msg.value.decode('utf-8')
         msg = json.loads(msg_str)
-        print(msg)
-        write_message(msg)
         try:
+            write_message(msg)
             consumer.commit_offsets()
         except:
 

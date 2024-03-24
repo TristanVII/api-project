@@ -3,16 +3,14 @@ import json
 from threading import Thread
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
-from connexion import NoContent, FlaskApp
+from connexion import FlaskApp
 from create_database import create_database, engine
 from models import JobApplication, JobListing
 from load_configs import load_log_conf
-from pykafka import KafkaClient
-from pykafka.common import OffsetType
 from db_conf import load_app_conf
 from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
-import time
+from kafka_client import Kafka
 
 LOGGER = load_log_conf()
 CONFIG = load_app_conf()
@@ -110,36 +108,12 @@ def get_jobs(start_timestamp, end_timestamp):
 
 def process_messages():
     """ Process event messages """
+    kafka = Kafka(KAFKA_HOSTNAME, KAFKA_PORT,
+                  LOGGER, KAFKA_RETRIES, KAFKA_DELAY)
 
-    hostname = "%s:%d" % (
-        KAFKA_HOSTNAME, KAFKA_PORT)
-    client = None
+    consumer = kafka.get_consumer(KAFKA_TOPIC)
+    producer = kafka.get_producer(KAFKA_EVENT_LOG)
 
-    retry = 1
-    while not client and retry < KAFKA_RETRIES:
-        try:
-            LOGGER.info("Storage connecting to kafka...")
-            client = KafkaClient(hosts=hostname)
-        except:
-            LOGGER.error(f"Failed to connect to kafka. Retry attempt {retry}")
-            retry += 1
-            client = None
-            time.sleep(KAFKA_DELAY)
-
-    if not client:
-        LOGGER.error(
-            f'Failed to connect to Kafka client after {retry} retries.')
-        exit(1)
-
-    LOGGER.info("Succesfully connected to Kafka")
-
-    topic = client.topics[str.encode(KAFKA_TOPIC)]
-
-    consumer = topic.get_simple_consumer(consumer_group=b'event_group',
-                                         reset_offset_on_start=False,
-                                         auto_offset_reset=OffsetType.LATEST)
-
-    producer = topic.get_sync_producer()
     msg = {"code": "0002",
            "datetime":
            datetime.now().strftime(
@@ -172,7 +146,7 @@ def process_messages():
 
             consumer.commit_offsets()
         except:
-            LOGGER.error(f"Error connecting to mysql to add {payload}")
+            LOGGER.error(f"Error connecting to mysql to add '{msg}'")
 
 
 app = FlaskApp(__name__, specification_dir='')
@@ -189,10 +163,7 @@ app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
     create_database()
-    LOGGER.info(
-        f'Connecting to DB. Hostname: {CONFIG["KAFKA_SERVER"]}, port: {CONFIG["KAFKA_PORT"]}')
     t1 = Thread(target=process_messages)
-
     t1.daemon = True
     t1.start()
     app.run(host="0.0.0.0", port=8090)

@@ -1,54 +1,43 @@
 import time
 import connexion
-from pykafka import KafkaClient
 import requests
 import datetime
 import json
 from connexion import FlaskApp, NoContent
 from load_configs import load_app_conf, load_log_conf
+from kafka_client import Kafka
 
 CONFIG = load_app_conf()
 CREATE_URL = CONFIG['job_create_url']
 APPLICATION_URL = CONFIG['job_application_url']
-KAFKA_SERVER = CONFIG['KAFKA_SERVER']
+KAFKA_HOST = CONFIG['KAFKA_SERVER']
 KAFKA_PORT = CONFIG['KAFKA_PORT']
 KAFKA_TOPIC = CONFIG['KAFKA_TOPIC']
 KAFKA_TRIES = CONFIG['KAFKA_TRIES']
 KAFKA_DELAY = CONFIG['KAFKA_DELAY']
 KAFKA_EVENT_LOG = CONFIG['KAFKA_EVENT_LOG']
-KAFKA_HOST = f'{KAFKA_SERVER}:{KAFKA_PORT}'
 LOGGER = load_log_conf()
+event_log_producer = None
+event_producer = None
 
-client = None
-tries = 0
 
-while tries < KAFKA_TRIES and not client:
-    try:
-        LOGGER.info("Receiver connecting to kafka...")
-        client = KafkaClient(hosts=f'{KAFKA_HOST}:{KAFKA_PORT}')
-        tries += 1
+def kafka_init():
+    global event_log_producer, event_producer
+    kafka = Kafka(KAFKA_HOST, KAFKA_PORT, LOGGER, KAFKA_TRIES, KAFKA_DELAY)
 
-    except:
-        LOGGER.error(f"Failed to connect to kafka. Rety attempt {tries}")
-        client = None
-        time.sleep(KAFKA_DELAY)
+    event_log_producer = kafka.get_producer(KAFKA_EVENT_LOG)
+    event_producer = kafka.get_producer(KAFKA_TOPIC)
+    if not event_log_producer or not event_producer:
+        LOGGER.error("Failed to get producers")
+        exit(1)
 
-if not client:
-    LOGGER.error(
-        f'Failed to connect to Kafka client after {tries} retries.')
-    exit(1)
-
-LOGGER.info("Succesfully connected to Kafka")
-
-topic = client.topics[str.encode(KAFKA_EVENT_LOG)]
-producer = topic.get_sync_producer()
-msg = {"code": "0001",
-       "datetime":
-       datetime.datetime.now().strftime(
-           "%Y-%m-%dT%H:%M:%S"),
-       "payload": "Succesfully connected to Kafka"}
-msg_str = json.dumps(msg)
-producer.produce(msg_str.encode('utf-8'))
+    msg = {"code": "0001",
+           "datetime":
+           datetime.datetime.now().strftime(
+               "%Y-%m-%dT%H:%M:%S"),
+           "payload": "Succesfully connected to Kafka"}
+    msg_str = json.dumps(msg)
+    event_log_producer.produce(msg_str.encode('utf-8'))
 
 
 def add_job_listing(body):
@@ -70,7 +59,7 @@ def add_job_listing(body):
                "%Y-%m-%dT%H:%M:%S"),
            "payload": body}
     msg_str = json.dumps(msg)
-    producer.produce(msg_str.encode('utf-8'))
+    event_producer.produce(msg_str.encode('utf-8'))
     print("SENT")
 
     LOGGER.info(
@@ -94,7 +83,7 @@ def add_job_application(body):
                "%Y-%m-%dT%H:%M:%S"),
            "payload": body}
     msg_str = json.dumps(msg)
-    producer.produce(msg_str.encode('utf-8'))
+    event_producer.produce(msg_str.encode('utf-8'))
     LOGGER.info(
         f'Returned event "{event_name}" response {trace_id} with status 201')
     return NoContent, 201
@@ -106,4 +95,5 @@ app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
 
 
 if __name__ == "__main__":
+    kafka_init()
     app.run(host="0.0.0.0", port=8080)

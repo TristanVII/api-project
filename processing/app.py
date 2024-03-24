@@ -1,9 +1,7 @@
 from datetime import datetime, timedelta
 import json
-import time
 from uuid import uuid4
 import connexion
-from pykafka import KafkaClient
 import requests
 from connexion import FlaskApp
 from load_configs import load_app_conf, load_log_conf
@@ -14,55 +12,46 @@ from schedular import init_scheduler
 from sqlalchemy.orm import Session
 from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
+from kafka_client import Kafka
 
-CONFIG = load_app_conf
+CONFIG = load_app_conf()
 TIME = CONFIG['TIME']
 EVENT_STORE_URL = CONFIG['URL']
-KAFKA_HOSTNAME = CONFIG['KAFKA_SERVER']
+KAFKA_HOST = CONFIG['KAFKA_SERVER']
 KAFKA_PORT = CONFIG['KAFKA_PORT']
-KAFKA_TOPIC = CONFIG['KAFKA_TOPIC']
 KAFKA_TRIES = CONFIG['KAFKA_RETRIES']
 KAFKA_DELAY = CONFIG['KAFKA_DELAY']
 KAFKA_EVENT_LOG = CONFIG['KAFKA_EVENT_LOG']
 KAFKA_EVENT_COUNT = CONFIG['KAFKA_EVENT_COUNT']
 LOGGER = load_log_conf()
-
-
-client = None
-tries = 0
-
-while tries < KAFKA_TRIES and not client:
-    try:
-        LOGGER.info("Storage connecting to kafka...")
-        client = KafkaClient(hosts=f'{KAFKA_HOSTNAME}:{KAFKA_PORT}')
-        tries += 1
-
-    except:
-        LOGGER.error(f"Failed to connect to kafka. Rety attempt {tries}")
-        client = None
-        time.sleep(KAFKA_DELAY)
-
-if not client:
-    LOGGER.error(
-        f'Failed to connect to Kafka client after {tries} retries.')
-    exit(1)
-
-LOGGER.info("Succesfully connected to Kafka")
-topic = client.topics[str.encode(KAFKA_EVENT_LOG)]
-producer = topic.get_sync_producer()
+event_log_producer = None
 
 
 def send_message(code, payload):
+    if not event_log_producer:
+        LOGGER.error(
+            f"Event log producer is missing. Could not send {code} - {payload}")
+        return
     msg = {"code": code,
            "datetime":
-           datetime.datetime.now().strftime(
+           datetime.now().strftime(
                "%Y-%m-%dT%H:%M:%S"),
            "payload": payload}
     msg_str = json.dumps(msg)
-    producer.produce(msg_str.encode('utf-8'))
+    LOGGER.info(f"Sent kafka message {msg_str}")
+    event_log_producer.produce(msg_str.encode('utf-8'))
 
 
-send_message("0003", "Succesfully connected to Kafka")
+def kafka_init():
+    global event_log_producer
+    kafka = Kafka(KAFKA_HOST, KAFKA_PORT, LOGGER, KAFKA_TRIES, KAFKA_DELAY)
+
+    event_log_producer = kafka.get_producer(KAFKA_EVENT_LOG)
+    if not event_log_producer:
+        LOGGER.error("Failed to get producer")
+        exit(1)
+
+    send_message("0003", "Succesfully connected to Kafka")
 
 
 def get_stats():
@@ -170,5 +159,6 @@ app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
     create_database()
+    kafka_init()
     init_scheduler(populate_stats, TIME)
     app.run(host="0.0.0.0", port=8100)
