@@ -23,9 +23,9 @@ def kafka_init():
     kafka = Kafka(KAFKA_HOST, KAFKA_PORT, LOGGER, KAFKA_TRIES, KAFKA_DELAY)
 
     consumer = kafka.get_consumer(KAFKA_TOPIC)
-    if not consumer:
+    while not consumer:
         LOGGER.error("Failed to get consumer")
-        exit(1)
+        consumer = kafka.get_consumer(KAFKA_TOPIC)
 
 
 kafka_init()
