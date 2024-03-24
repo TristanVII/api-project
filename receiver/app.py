@@ -40,6 +40,9 @@ def kafka_init():
     event_log_producer.produce(msg_str.encode('utf-8'))
 
 
+kafka_init()
+
+
 def add_job_listing(body):
     """ Receives a job listing event """
     # header = {'Content-type': 'application/json'}
@@ -51,8 +54,6 @@ def add_job_listing(body):
 
     body['trace_id'] = str(trace_id)
 
-    print("KAFKA")
-
     msg = {"type": "job_create",
            "datetime":
            datetime.datetime.now().strftime(
@@ -60,7 +61,6 @@ def add_job_listing(body):
            "payload": body}
     msg_str = json.dumps(msg)
     event_producer.produce(msg_str.encode('utf-8'))
-    print("SENT")
 
     LOGGER.info(
         f'Returned event {event_name} response {trace_id} with status 201')
@@ -83,6 +83,7 @@ def add_job_application(body):
                "%Y-%m-%dT%H:%M:%S"),
            "payload": body}
     msg_str = json.dumps(msg)
+    print(event_producer)
     event_producer.produce(msg_str.encode('utf-8'))
     LOGGER.info(
         f'Returned event "{event_name}" response {trace_id} with status 201')
@@ -95,5 +96,4 @@ app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
 
 
 if __name__ == "__main__":
-    kafka_init()
     app.run(host="0.0.0.0", port=8080)

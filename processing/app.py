@@ -54,6 +54,9 @@ def kafka_init():
     send_message("0003", "Succesfully connected to Kafka")
 
 
+kafka_init()
+
+
 def get_stats():
     LOGGER.info('Received request for stats')
     stats = read_stats(False)
@@ -159,6 +162,5 @@ app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
     create_database()
-    kafka_init()
     init_scheduler(populate_stats, TIME)
     app.run(host="0.0.0.0", port=8100)
