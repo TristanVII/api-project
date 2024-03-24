@@ -1,12 +1,12 @@
 import time
 import connexion
-from pykafka import KafkaClient
 import json
 from connexion import FlaskApp
 from load_configs import load_log_conf, load_app_conf
 from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
-
+from kafka_client import Kafka
+from datetime import datetime
 
 LOGGER = load_log_conf()
 CONFIG = load_app_conf()
@@ -15,31 +15,20 @@ KAFKA_PORT = CONFIG['KAFKA_PORT']
 KAFKA_TOPIC = CONFIG['KAFKA_TOPIC']
 KAFKA_TRIES = CONFIG['KAFKA_TRIES']
 KAFKA_DELAY = CONFIG['KAFKA_DELAY']
+consumer = None
 
 
-client = None
-tries = 0
+def kafka_init():
+    global consumer
+    kafka = Kafka(KAFKA_HOST, KAFKA_PORT, LOGGER, KAFKA_TRIES, KAFKA_DELAY)
 
-while tries < KAFKA_TRIES and not client:
-    try:
-        LOGGER.info("Storage connecting to kafka...")
-        client = KafkaClient(hosts=f'{KAFKA_HOST}:{KAFKA_PORT}')
-        tries += 1
+    consumer = kafka.get_consumer(KAFKA_TOPIC)
+    if not consumer:
+        LOGGER.error("Failed to get consumer")
+        exit(1)
 
-    except:
-        LOGGER.error(f"Failed to connect to kafka. Rety attempt {tries}")
-        client = None
-        time.sleep(KAFKA_DELAY)
 
-if not client:
-    LOGGER.error(
-        f'Failed to connect to Kafka client after {tries} retries.')
-    exit(1)
-
-LOGGER.info("Succesfully connected to Kafka")
-topic = client.topics[str.encode(KAFKA_TOPIC)]
-consumer = topic.get_simple_consumer(reset_offset_on_start=True,
-                                     consumer_timeout_ms=1000)
+kafka_init()
 
 
 def get_event_at_index(event, index):
