@@ -195,5 +195,4 @@ if __name__ == "__main__":
 
     t1.daemon = True
     t1.start()
-    LOGGER.info("app running")
     app.run(host="0.0.0.0", port=8090)

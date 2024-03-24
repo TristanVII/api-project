@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  title: Event Logger API
+  description: Returns event stats
+  contact:
+    email: tdavis53@my.bcit.ca
+  version: 1.0.0
+servers:
+  - url: /
+paths:
+  /events_stats:
+    get:
+      summary: Summary
+      operationId: app.get_events_stats
+      description: Get application event at index
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventLog'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+components:
+  schemas:
+    EventLog:
+      type: object
+      properties:
+        "0001":
+          type: integer
+          example: 1
+        "0002":
+          type: integer
+          example: 2
+        "0003":
+          type: integer
+          example: 1
+        "0004":
+          type: integer
+          example: 1
+      example:
+        "0001": 1
+        "0002": 2
+        "0003": 1
+        "0004": 1

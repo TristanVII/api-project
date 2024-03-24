@@ -34,7 +34,7 @@ tries = 0
 while tries < KAFKA_TRIES and not client:
     try:
         LOGGER.info("Storage connecting to kafka...")
-        client = KafkaClient(hosts=KAFKA_HOSTNAME)
+        client = KafkaClient(hosts=f'{KAFKA_HOSTNAME}:{KAFKA_PORT}')
         tries += 1
 
     except:
@@ -172,4 +172,3 @@ if __name__ == "__main__":
     create_database()
     init_scheduler(populate_stats, TIME)
     app.run(host="0.0.0.0", port=8100)
-    print("processing service closed...")

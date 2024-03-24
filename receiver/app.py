@@ -24,8 +24,8 @@ tries = 0
 
 while tries < KAFKA_TRIES and not client:
     try:
-        LOGGER.info("Storage connecting to kafka...")
-        client = KafkaClient(hosts=KAFKA_HOST)
+        LOGGER.info("Receiver connecting to kafka...")
+        client = KafkaClient(hosts=f'{KAFKA_HOST}:{KAFKA_PORT}')
         tries += 1
 
     except:
@@ -39,6 +39,7 @@ if not client:
     exit(1)
 
 LOGGER.info("Succesfully connected to Kafka")
+
 topic = client.topics[str.encode(KAFKA_EVENT_LOG)]
 producer = topic.get_sync_producer()
 msg = {"code": "0001",
@@ -106,4 +107,3 @@ app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
-    print("Receiver service closed...")

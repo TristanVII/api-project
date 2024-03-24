@@ -27,12 +27,14 @@ def load_app_conf():
     with open('app_conf.yml', 'r') as f:
         app_config = yaml.safe_load(f.read())
 
-        events = app_config['events']
+        kafka = app_config['events']
+        datastore = app_config['datastore']
         config_dict = {
-            'KAFKA_SERVER': events['hostname'],
-            'KAFKA_PORT': events['port'],
-            'KAFKA_TOPIC': events['topic'],
-            'KAFKA_TRIES': events['max_tries'],
-            'KAFKA_DELAY': events['delay']
+            'DATABASE': datastore['filename'],
+            'KAFKA_SERVER': kafka['hostname'],
+            'KAFKA_PORT': kafka['port'],
+            'KAFKA_EVENT_LOG': kafka['event_log'],
+            'KAFKA_TRIES': kafka['max_tries'],
+            'KAFKA_DELAY': kafka['delay']
         }
     return config_dict

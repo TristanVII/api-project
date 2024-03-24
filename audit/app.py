@@ -1,10 +1,8 @@
 import time
 import connexion
 from pykafka import KafkaClient
-import requests
-import datetime
 import json
-from connexion import FlaskApp, NoContent
+from connexion import FlaskApp
 from load_configs import load_log_conf, load_app_conf
 from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
@@ -15,13 +13,36 @@ CONFIG = load_app_conf()
 KAFKA_HOST = CONFIG['KAFKA_SERVER']
 KAFKA_PORT = CONFIG['KAFKA_PORT']
 KAFKA_TOPIC = CONFIG['KAFKA_TOPIC']
+KAFKA_TRIES = CONFIG['KAFKA_TRIES']
+KAFKA_DELAY = CONFIG['KAFKA_DELAY']
+
+
+client = None
+tries = 0
+
+while tries < KAFKA_TRIES and not client:
+    try:
+        LOGGER.info("Storage connecting to kafka...")
+        client = KafkaClient(hosts=f'{KAFKA_HOST}:{KAFKA_PORT}')
+        tries += 1
+
+    except:
+        LOGGER.error(f"Failed to connect to kafka. Rety attempt {tries}")
+        client = None
+        time.sleep(KAFKA_DELAY)
+
+if not client:
+    LOGGER.error(
+        f'Failed to connect to Kafka client after {tries} retries.')
+    exit(1)
+
+LOGGER.info("Succesfully connected to Kafka")
+topic = client.topics[str.encode(KAFKA_TOPIC)]
+consumer = topic.get_simple_consumer(reset_offset_on_start=True,
+                                     consumer_timeout_ms=1000)
 
 
 def get_event_at_index(event, index):
-    client = KafkaClient(hosts=f'{KAFKA_HOST}:{KAFKA_PORT}')
-    topic = client.topics[str.encode(KAFKA_TOPIC)]
-    consumer = topic.get_simple_consumer(reset_offset_on_start=True,
-                                         consumer_timeout_ms=1000)
     LOGGER.info(f"Retrieving {event} at index: {index} ")
     try:
         curr = 0
@@ -68,4 +89,3 @@ app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8110)
-    print("audit service closed...")

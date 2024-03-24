@@ -1,7 +1,11 @@
+version: 1
+datastore:
+  filename: event_log.sqlite
 events:
   hostname: ec2-44-232-43-222.us-west-2.compute.amazonaws.com
   port: 9092
-  topic: events
+  event_log: event_log
   max_tries: 10
   delay: 5
+  event_count: 25
 
