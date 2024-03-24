@@ -27,10 +27,9 @@ def kafka_init():
 
     event_log_producer = kafka.get_producer(KAFKA_EVENT_LOG)
     event_producer = kafka.get_producer(KAFKA_TOPIC)
-    while not event_log_producer or not event_producer:
+    if not event_log_producer or not event_producer:
         LOGGER.error("Failed to get producers")
-        event_log_producer = kafka.get_producer(KAFKA_EVENT_LOG)
-        event_producer = kafka.get_producer(KAFKA_TOPIC)
+        exit(1)
 
     msg = {"code": "0001",
            "datetime":

@@ -23,19 +23,21 @@ def kafka_init():
     kafka = Kafka(KAFKA_HOST, KAFKA_PORT, LOGGER, KAFKA_TRIES, KAFKA_DELAY)
 
     consumer = kafka.get_consumer(KAFKA_TOPIC)
-    while not consumer:
+    if not consumer:
         LOGGER.error("Failed to get consumer")
-        consumer = kafka.get_consumer(KAFKA_TOPIC)
+        exit(1)
 
 
 kafka_init()
 
 
 def get_event_at_index(event, index):
+    global consumer
     LOGGER.info(f"Retrieving {event} at index: {index} ")
     try:
         curr = 0
         for msg in consumer:
+            print("message: ", msg)
             msg_str = msg.value.decode('utf-8')
             msg = json.loads(msg_str)
             if msg['type'] == event:
