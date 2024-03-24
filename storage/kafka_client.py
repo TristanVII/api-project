@@ -56,6 +56,7 @@ class Kafka:
                                                  auto_offset_reset=OffsetType.LATEST)
         except:
             self.logger.error("Failed to get comsumer")
+            return
 
         self.logger.debug(f"Got consumer for {topic_name}")
         return consumer
@@ -63,9 +64,10 @@ class Kafka:
     def get_producer(self, topic_name):
         try:
             topic = self.__get_topic(topic_name)
-            producer = producer = topic.get_sync_producer()
+            producer = topic.get_sync_producer()
         except:
             self.logger.error("Failed to get producer")
+            return
 
         self.logger.debug(f"Got producer for {topic_name}")
         return producer
