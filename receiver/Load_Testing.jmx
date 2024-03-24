@@ -18,7 +18,7 @@
         </collectionProp>
       </HeaderManager>
       <hashTree/>
-      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Job Listing Data">
+      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Job Listing Data" enabled="true">
         <stringProp name="delimiter">,</stringProp>
         <stringProp name="fileEncoding">utf-8</stringProp>
         <stringProp name="filename">/Users/tristandavis/Documents/school/sem4/3855/lab/receiver/job_listing_data.csv</stringProp>
@@ -30,7 +30,7 @@
         <stringProp name="variableNames">job_listing_id, sector, title, location, date</stringProp>
       </CSVDataSet>
       <hashTree/>
-      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Job Application Data">
+      <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Job Application Data" enabled="true">
         <stringProp name="filename">/Users/tristandavis/Documents/school/sem4/3855/lab/receiver/job_application_data.csv</stringProp>
         <stringProp name="fileEncoding">utf-8</stringProp>
         <stringProp name="variableNames">job_application_id, job_listing_id, age, gender, years_of_experience</stringProp>
@@ -54,7 +54,7 @@
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/job/create">
-          <stringProp name="HTTPSampler.domain">127.0.0.1</stringProp>
+          <stringProp name="HTTPSampler.domain">ec2-44-232-43-222.us-west-2.compute.amazonaws.com</stringProp>
           <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
@@ -82,7 +82,7 @@
         </HTTPSamplerProxy>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/job/application">
-          <stringProp name="HTTPSampler.domain">127.0.0.1</stringProp>
+          <stringProp name="HTTPSampler.domain">ec2-44-232-43-222.us-west-2.compute.amazonaws.com</stringProp>
           <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>

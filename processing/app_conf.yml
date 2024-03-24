@@ -8,7 +8,7 @@ eventstore:
 events:
   hostname: ec2-44-232-43-222.us-west-2.compute.amazonaws.com
   port: 9092
-  event_log: event_log
+  event_log: events2
   max_tries: 10
   delay: 5
   event_count: 25
