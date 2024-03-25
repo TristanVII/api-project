@@ -51,11 +51,9 @@ class Kafka:
     def get_consumer(self, topic_name):
         try:
             topic = self.__get_topic(topic_name)
-            print(topic)
-            consumer = topic.get_simple_consumer(consumer_group=b'event_group',
-                                                 reset_offset_on_start=False,
-                                                 auto_offset_reset=OffsetType.LATEST)
-            print(consumer)
+            consumer = topic.get_simple_consumer(
+                reset_offset_on_start=True,
+                consumer_timeout_ms=1000)
         except:
             self.logger.error("Failed to get comsumer")
             return
