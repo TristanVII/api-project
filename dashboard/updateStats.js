@@ -4,6 +4,7 @@ const EVENTS_URL = {
   jobs: `${EC2_IP}:8110/job`,
   applications: `${EC2_IP}:8110/application`,
 };
+const LOG_URL = `${EC2_IP}:8120/events_stats`;
 
 const getDate = () => {
   const now = new Date();
@@ -117,11 +118,26 @@ const eventInput = () => {
   });
 };
 
+const updateLogs = (index) => {
+  fetch(LOG_URL)
+    .then((res) => res.json())
+    .then((result) => {
+      const elem = document.getElementById(`event-logs`);
+      elem.innerHTML = `<h5>Update count ${index}</h5>`;
+      for (const [key, value] of Object.entries(result)) {
+        const pElm = document.createElement("p");
+        pElm.innerHTML = `<strong>${key}:</strong> ${value}`;
+        elem.appendChild(pElm);
+      }
+    });
+};
+
 const setup = () => {
   let index = 1;
   eventInput();
   const interval = setInterval(() => {
     getStats(STATS_API_URL);
+    updateLogs(index);
     // getEvent("jobs", index);
     // getEvent("applications", index);
     index++;
