@@ -54,7 +54,7 @@
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/job/create">
-          <stringProp name="HTTPSampler.domain">ec2-44-232-43-222.us-west-2.compute.amazonaws.com</stringProp>
+          <stringProp name="HTTPSampler.domain">34.118.240.191</stringProp>
           <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
@@ -82,7 +82,7 @@
         </HTTPSamplerProxy>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/job/application">
-          <stringProp name="HTTPSampler.domain">ec2-44-232-43-222.us-west-2.compute.amazonaws.com</stringProp>
+          <stringProp name="HTTPSampler.domain">34.118.240.191</stringProp>
           <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
