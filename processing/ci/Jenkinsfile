@@ -1,2 +1,2 @@
 @Library('shared-library') _
-python_test()
+python_test('processing')
