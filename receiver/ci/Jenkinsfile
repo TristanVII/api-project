@@ -1,4 +1,4 @@
 pipeline {
-    @Library('Assignment3_shared_library') _
-    call
+    @Library('shared-library') _
+    call()
 }
