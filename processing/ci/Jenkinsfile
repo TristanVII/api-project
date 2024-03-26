@@ -1,2 +1,2 @@
 @Library('shared-library') _
-python_test('processing')
+python_test('processing', 'processingImage', true)

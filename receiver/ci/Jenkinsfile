@@ -1,3 +1,3 @@
 @Library('shared-library') _
 
-python_test('receiver')
+python_test('receiver', 'receiverImage', false)
