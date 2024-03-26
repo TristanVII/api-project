@@ -1,3 +1,2 @@
 @Library('shared-library') _
-
-testFunction('This is a test message')
+python_test('This is a test message')
