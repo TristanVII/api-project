@@ -76,9 +76,10 @@ def fetch_and_process_data():
         'start_timestamp': data['last_updated'].strftime("%Y-%m-%dT%H:%M:%S")
     }
 
-    jobs_request = requests.get(f'{EVENT_STORE_URL}/jobs', params=params)
+    jobs_request = requests.get(
+        f'{EVENT_STORE_URL}/jobs', params=params, timeout=10)
     applications_request = requests.get(
-        f'{EVENT_STORE_URL}/applications', params=params)
+        f'{EVENT_STORE_URL}/applications', params=params, timeout=10)
 
     if jobs_request.status_code != 200:
         raise Exception('Error fetching jobs')
@@ -93,11 +94,11 @@ def fetch_and_process_data():
     LOGGER.info(
         f'Received {num_jobs_data} job events and {num_application_data} application events')
 
-    if num_jobs_data >= KAFKA_EVENT_COUNT:
-        send_message("0004", f"Received {num_jobs_data} job data")
-    if num_application_data >= KAFKA_EVENT_COUNT:
+    if num_jobs_data + num_application_data >= KAFKA_EVENT_COUNT:
         send_message(
-            "0004", f"Received {num_application_data} job applications")
+            "0004", f"Received {num_application_data + num_jobs_data} events")
+        LOGGER.info(
+            f"Logging 00004. Received {num_application_data + num_jobs_data} events")
 
     # updates data inplace
     process_jobs(jobs_data, data)
