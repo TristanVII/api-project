@@ -1,4 +1,2 @@
-pipeline {
-    @Library("shared-library") _
-    call()
-}
+@Library("shared-library") _
+call()
