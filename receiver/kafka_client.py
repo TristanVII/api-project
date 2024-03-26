@@ -4,6 +4,8 @@ from pykafka.common import OffsetType
 
 
 class Kafka:
+    """ Kafka client class"""
+
     def __init__(self, hostname, port, logger, max_tries=5, delay=5):
         self.hostname = hostname
         self.port = port
@@ -23,7 +25,7 @@ class Kafka:
                 self.logger.info(
                     f"Trying to connect to Kafka at {self.hostname}:{self.port}")
                 self.client = KafkaClient(hosts=f'{self.hostname}:{self.port}')
-            except:
+            except Exception as _:
                 self.logger.error(
                     f"Failed connecting to kafka on attempt {tries + 1}")
                 tries += 1

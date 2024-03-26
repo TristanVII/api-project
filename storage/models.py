@@ -11,6 +11,7 @@ class Base(DeclarativeBase):
 
 
 class JobListing(Base):
+    """ Job Listing Class"""
     __tablename__ = "job_listing"
     id: Mapped[Integer] = mapped_column(Integer, primary_key=True)
     job_listing_id: Mapped[String] = mapped_column(
@@ -39,6 +40,7 @@ class JobListing(Base):
 
 
 class JobApplication(Base):
+    """ Job Application Class"""
     __tablename__ = "job_application"
     id: Mapped[Integer] = mapped_column(Integer, primary_key=True)
     job_application_id: Mapped[String] = mapped_column(
