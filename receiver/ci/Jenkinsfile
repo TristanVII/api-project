@@ -1,11 +1,4 @@
 pipeline {
-    agent any
-
-    stages {
-        stage('Checkout') {
-            steps {
-                echo "TEST"
-            }
-        }
-    }
+    @Library('Assignment3_shared_library') _
+    call()
 }
