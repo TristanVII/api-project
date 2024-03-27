@@ -14,7 +14,6 @@ from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
 from kafka_client import Kafka
 
-# Added Comment
 CONFIG = load_app_conf()
 TIME = CONFIG['TIME']
 EVENT_STORE_URL = CONFIG['URL']
