@@ -148,7 +148,7 @@ def read_stats(full):
         return result.to_dict(full)
 
 
-# Your functions here
+# Your functions here here
 app = FlaskApp(__name__, specification_dir='')
 app.add_middleware(
     CORSMiddleware,
