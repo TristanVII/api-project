@@ -29,7 +29,8 @@ def get_events_stats():
     with Session(engine) as session:
         events = session.query(Event).all()
 
-    LOGGER.info(f"Stats database query returned {events}")
+    LOGGER.info(
+        f"Stats database query returned {[event.code for event in events]}")
     resp = {
         "0001": 0,
         "0002": 0,
