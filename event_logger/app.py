@@ -26,6 +26,10 @@ KAFKA_DELAY = CONFIG['KAFKA_DELAY']
 
 def get_events_stats():
     with Session(engine) as session:
+        events = Event.query.all()
+        LOGGER.info(f"EVENTS : {len(events)}")
+        for event in events:
+            LOGGER.info(f'{event.code}')
         query = session.query(Event.code, func.sum(
             Event.code)).group_by(Event.code)
         results = query.all()

@@ -37,6 +37,7 @@ def kafka_init():
                "%Y-%m-%dT%H:%M:%S"),
            "payload": "Succesfully connected to Kafka"}
     msg_str = json.dumps(msg)
+    LOGGER.info(f"Sent kafka message {msg_str}")
     event_log_producer.produce(msg_str.encode('utf-8'))
 
 
