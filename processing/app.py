@@ -111,7 +111,7 @@ def fetch_and_process_data():
 
 
 def populate_stats():
-    LOGGER.info("TODAY NEW LOG")
+    LOGGER.info("Assignment 3 for MIKE")
     try:
         data, time = fetch_and_process_data()
         write_stats(data['num_jobs'], data['num_applications'],
