@@ -10,5 +10,5 @@ engine = create_engine(f"sqlite:///{DATABASE}", echo=True)
 
 
 def create_database():
-    if not (os.path.exists(f"./{DATABASE}")):
+    if not (os.path.exists(f"{DATABASE}")):
         Base.metadata.create_all(engine)
