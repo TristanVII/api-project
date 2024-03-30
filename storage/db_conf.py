@@ -1,5 +1,18 @@
 import yaml
 
+import os
+
+
+def get_app_conf_file():
+    app_conf_file = ''
+    if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "TEST":
+        print("In Test Env")
+        app_conf_file = "/config/app_conf.yml"
+    else:
+        print("In Dev Env")
+        app_conf_file = "app_conf.yml"
+    return app_conf_file
+
 
 def load_app_conf():
     """
@@ -11,7 +24,7 @@ def load_app_conf():
         - PORT: string
         - DB: string
     """
-    with open('app_conf.yml', 'r') as f:
+    with open(get_app_conf_file(), 'r') as f:
         app_config = yaml.safe_load(f.read())
         datastore = app_config['datastore']
         events = app_config['events']
