@@ -6,6 +6,7 @@ import os
 
 def get_app_conf_file():
     app_conf_file = ''
+    print(os.environ)
     if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "TEST":
         print("In Test Env")
         app_conf_file = "/config/app_conf.yml"
