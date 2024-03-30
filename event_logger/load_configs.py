@@ -31,7 +31,7 @@ def load_log_conf():
     Returns:
         logger: Logger
     """
-    with open(load_log_conf(), 'r') as f:
+    with open(get_log_conf_file(), 'r') as f:
         log_config = yaml.safe_load(f.read())
         logging.config.dictConfig(log_config)
         logger = logging.getLogger('basicLogger')
