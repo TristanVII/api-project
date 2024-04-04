@@ -4,7 +4,7 @@ const EVENTS_URL = {
   jobs: `${EC2_IP}/audit_log/job`,
   applications: `${EC2_IP}/audit_log/application`,
 };
-const LOG_URL = `${EC2_IP}/event_logger/events_stats`;
+const LOG_URL = `/event_logger/events_stats`;
 
 const getDate = () => {
   const now = new Date();
