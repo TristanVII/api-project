@@ -1,8 +1,8 @@
 version: 1
 job_create:
-  url: http://localhost:8090/job/create
+  url: http://localhost/storage/job/create
 job_application:
-  url: http://localhost:8090/job/application
+  url: http://localhost/storage/job/application
 events:
   hostname: 34.118.240.191
   port: 9092

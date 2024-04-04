@@ -1,8 +1,8 @@
 const EC2_IP = "localhost";
 const STATS_API_URL = `/processing/stats`;
 const EVENTS_URL = {
-  jobs: `${EC2_IP}/audit_log/job`,
-  applications: `${EC2_IP}/audit_log/application`,
+  jobs: `/audit_log/job`,
+  applications: `/audit_log/application`,
 };
 const LOG_URL = `/event_logger/events_stats`;
 
