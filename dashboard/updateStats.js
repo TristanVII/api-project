@@ -1,10 +1,10 @@
-const EC2_IP = "http://34.118.240.191";
-const STATS_API_URL = `${EC2_IP}:8100/stats`;
+const EC2_IP = "localhost";
+const STATS_API_URL = `/processing/stats`;
 const EVENTS_URL = {
-  jobs: `${EC2_IP}:8110/job`,
-  applications: `${EC2_IP}:8110/application`,
+  jobs: `${EC2_IP}/audit_log/job`,
+  applications: `${EC2_IP}/audit_log/application`,
 };
-const LOG_URL = `${EC2_IP}:8120/events_stats`;
+const LOG_URL = `${EC2_IP}/event_logger/events_stats`;
 
 const getDate = () => {
   const now = new Date();
