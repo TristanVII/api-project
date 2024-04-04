@@ -158,7 +158,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
+app.add_api("./openapi.yaml", base_path="/storage",
+            strict_validation=True, validate_responses=True)
 
 
 if __name__ == "__main__":

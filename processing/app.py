@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import json
+import os
 from uuid import uuid4
 import connexion
 import requests
@@ -151,15 +152,20 @@ def read_stats(full):
 
 # Your functions here here
 app = FlaskApp(__name__, specification_dir='')
-app.add_middleware(
-    CORSMiddleware,
-    position=MiddlewarePosition.BEFORE_EXCEPTION,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
+
+if "TARGET_ENV" not in os.environ or os.environ["TARGET_ENV"] != "test":
+    LOGGER.info("In test env. CORS disabled")
+    app.add_middleware(
+        CORSMiddleware,
+        position=MiddlewarePosition.BEFORE_EXCEPTION,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+app.add_api("./openapi.yaml", base_path="/processing",
+            strict_validation=True, validate_responses=True)
 
 
 if __name__ == "__main__":

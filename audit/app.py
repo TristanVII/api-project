@@ -1,3 +1,4 @@
+import os
 import time
 import connexion
 import json
@@ -62,15 +63,21 @@ def get_job(index):
 
 # Your functions here
 app = FlaskApp(__name__, specification_dir='')
-app.add_middleware(
-    CORSMiddleware,
-    position=MiddlewarePosition.BEFORE_EXCEPTION,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-app.add_api("./openapi.yaml", strict_validation=True, validate_responses=True)
+
+
+if "TARGET_ENV" not in os.environ or os.environ["TARGET_ENV"] != "test":
+    LOGGER.info("In test env. CORS disabled")
+    app.add_middleware(
+        CORSMiddleware,
+        position=MiddlewarePosition.BEFORE_EXCEPTION,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+#
+app.add_api("./openapi.yaml", base_path="/audit_log",
+            strict_validation=True, validate_responses=True)
 
 
 if __name__ == "__main__":
