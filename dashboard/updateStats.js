@@ -5,6 +5,7 @@ const EVENTS_URL = {
   applications: `/audit_log/application`,
 };
 const LOG_URL = `/event_logger/events_stats`;
+const ANOMALY_URL = `/anomaly_detector/anomalies:`;
 
 const getDate = () => {
   const now = new Date();
@@ -132,12 +133,42 @@ const updateLogs = (index) => {
     });
 };
 
+const updateAnomaliesTooHigh = () => {
+  fetch(`ANOMALY_URL?anomaly_type=TooHigh`)
+    .then((res) => res.json())
+    .then((result) => {
+      const elem = document.getElementById(`event-anomaly`);
+      elem.innerHTML = `<h5>TooHigh</h5>`;
+      for (const [key, value] of Object.entries(result)) {
+        const pElm = document.createElement("p");
+        pElm.innerHTML = `<strong>${key}:</strong> ${value}`;
+        elem.appendChild(pElm);
+      }
+    });
+};
+
+const updateAnomaliesTooLow = () => {
+  fetch(`ANOMALY_URL?anomaly_type=TooLow`)
+    .then((res) => res.json())
+    .then((result) => {
+      const elem = document.getElementById(`event-anomaly`);
+      elem.innerHTML = `<h5>TooLow</h5>`;
+      for (const [key, value] of Object.entries(result)) {
+        const pElm = document.createElement("p");
+        pElm.innerHTML = `<strong>${key}:</strong> ${value}`;
+        elem.appendChild(pElm);
+      }
+    });
+};
+
 const setup = () => {
   let index = 1;
   eventInput();
   const interval = setInterval(() => {
     getStats(STATS_API_URL);
     updateLogs(index);
+    updateAnomaliesTooHigh();
+    updateAnomaliesTooLow();
     // getEvent("jobs", index);
     // getEvent("applications", index);
     index++;
