@@ -51,15 +51,16 @@ def load_app_conf():
     with open(get_app_conf_file(), 'r') as f:
         app_config = yaml.safe_load(f.read())
 
-        # kafka = app_config['events']
-        # datastore = app_config['datastore']
-        # config_dict = {
-        #     'DATABASE': datastore['filename'],
-        #     'KAFKA_SERVER': kafka['hostname'],
-        #     'KAFKA_PORT': kafka['port'],
-        #     'KAFKA_EVENT_LOG': kafka['event_log'],
-        #     'KAFKA_TRIES': kafka['max_tries'],
-        #     'KAFKA_DELAY': kafka['delay']
-        # }
-    return {}
+        events = app_config['events']
+        data = app_config['datastore']
+        config_dict = {
+            'KAFKA_SERVER': events['hostname'],
+            'KAFKA_PORT': events['port'],
+            'KAFKA_TOPIC': events['topic'],
+            'KAFKA_TRIES': events['max_tries'],
+            'KAFKA_DELAY': events['delay'],
+            'SALARY_THRESHOLD': events['salary_threshold'],
+            'AGE_THRESHOLD': events['age_threshold'],
+            'DATABASE': data['filename']
+        }
     return config_dict

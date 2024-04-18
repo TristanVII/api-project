@@ -14,7 +14,7 @@ handlers:
     class: logging.FileHandler
     level: DEBUG
     formatter: simple
-    filename: /logs/prac.log
+    filename: /logs/anomalies.log
 
 loggers:
   basicLogger:
@@ -23,5 +23,5 @@ loggers:
     propagate: no
 
 root:
-  level: ERROR
+  level: DEBUG
   handlers: [console]
