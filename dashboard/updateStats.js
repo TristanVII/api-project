@@ -143,6 +143,7 @@ const updateAnomaliesTooHigh = () => {
         const pElm = document.createElement("p");
         pElm.innerHTML = `<strong>${key}:</strong> ${value}`;
         elem.appendChild(pElm);
+        break;
       }
     });
 };
@@ -157,6 +158,7 @@ const updateAnomaliesTooLow = () => {
         const pElm = document.createElement("p");
         pElm.innerHTML = `<strong>${key}:</strong> ${value}`;
         elem.appendChild(pElm);
+        break;
       }
     });
 };

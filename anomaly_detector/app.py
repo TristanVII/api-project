@@ -34,13 +34,14 @@ kafka_init()
 
 
 def get_anomalies(anomaly_type):
+    """returns list of anomalies from mysqlite"""
     if anomaly_type != 'TooLow' and anomaly_type != 'TooHigh':
         LOGGER.debug("Invalid Anomalytype - return status 400")
         return {"message": "invalid anomaly"}, 400
     try:
         with Session(engine) as session:
             data = session.query(Anomaly).filter(
-                Anomaly.anomaly_type == str(anomaly_type)).all()
+                Anomaly.anomaly_type == str(anomaly_type)).order_by(Anomaly.date_created.desc()).all()
             res = [d.to_dict() for d in data]
             print(res)
 
@@ -55,6 +56,7 @@ def get_anomalies(anomaly_type):
 
 
 def write_message(msg):
+    """ Write event to mysqlite"""
     LOGGER.debug(f"RECEIVED MSG: {msg}")
     event = Anomaly(
         event_id=str(msg['event_id']),
