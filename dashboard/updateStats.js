@@ -5,7 +5,7 @@ const EVENTS_URL = {
   applications: `/audit_log/application`,
 };
 const LOG_URL = `/event_logger/events_stats`;
-const ANOMALY_URL = `/anomaly_detector/anomalies:`;
+const ANOMALY_URL = `/anomaly_detector/anomalies`;
 
 const getDate = () => {
   const now = new Date();
