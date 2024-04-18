@@ -25,9 +25,7 @@ paths:
           description: Success
           content:
             application/json:
-              schema:
-                type: integer
-                example: 1 
+              schema: {}
         '400':
           description: Invalid request
           content:
