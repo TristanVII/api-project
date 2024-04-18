@@ -23,10 +23,10 @@ paths:
       responses:
         '201':
           description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MockEvent'
+          # content:
+          #   application/json:
+          #     schema:
+          #       $ref: '#/components/schemas/MockEvent'
         '400':
           description: Invalid request
           content:
