@@ -14,7 +14,7 @@ CONFIG = load_app_conf()
 
 def mock_get(idx):
     LOGGER.info(f'RECEIVED: {idx}')
-    return int(idx), 201
+    return str(idx), 201
 
 
 def mock_post(body):
