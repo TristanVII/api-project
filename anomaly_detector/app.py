@@ -56,14 +56,12 @@ def get_anomalies(anomaly_type):
 
 def write_message(msg):
     LOGGER.debug(f"RECEIVED MSG: {msg}")
-    time = datetime.now()
     event = Anomaly(
         event_id=str(msg['event_id']),
         trace_id=str(msg['trace_id']),
         event_type=str(msg['event_type']),
         anomaly_type=str(msg['anomaly_type']),
         description=str(msg['description']),
-        date_created=time
     )
     LOGGER.info(
         f"Event: {event.event_id} - {event.trace_id} - {event.date}")
