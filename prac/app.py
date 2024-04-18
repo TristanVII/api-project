@@ -8,18 +8,17 @@ from starlette.middleware.cors import CORSMiddleware
 from connexion import FlaskApp, NoContent
 from load_configs import load_app_conf, load_log_conf
 
-# LOGGER = load_log_conf()
+LOGGER = load_log_conf()
 CONFIG = load_app_conf()
 
 
-def mock_get(idx):
-    # LOGGER.info(f'RECEIVED: {idx}')
-    print(idx)
-    return {'response': int(idx)}, 201
+def mock_get(index):
+    LOGGER.info(f'RECEIVED: {index}')
+    return {'response': int(index)}, 201
 
 
 def mock_post(body):
-    # LOGGER.info(f"Received {body}")
+    LOGGER.info(f"Received {body}")
     return NoContent, 201
 
 
