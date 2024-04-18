@@ -1,11 +1,27 @@
 version: 1
-datastore:
-  filename: /var/db/event_log.sqlite
-events:
-  hostname: 34.118.240.191
-  port: 9092
-  event_log: events2
-  max_tries: 10
-  delay: 5
-  event_count: 25
 
+formatters:
+  simple:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+  file:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: simple
+    filename: /logs/prac.log
+
+loggers:
+  basicLogger:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: no
+
+root:
+  level: DEBUG
+  handlers: [console]
