@@ -1,9 +1,9 @@
 from sqlalchemy import DateTime, Integer
+from datetime import datetime
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-import datetime
 
 
 class Base(DeclarativeBase):
@@ -18,7 +18,7 @@ class Anomaly(Base):
     event_type: Mapped[String] = mapped_column(String(100), nullable=False)
     anomaly_type: Mapped[String] = mapped_column(String(100), nullable=False)
     description: Mapped[String] = mapped_column(String(250), nullable=False)
-    date_created: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
+    date_created: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
     def to_dict(self):
         """ Dictionary Representation of an anomaly """
