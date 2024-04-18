@@ -1,7 +1,7 @@
 import time
 import connexion
 import requests
-import datetime
+from datetime import datetime
 import json
 from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
