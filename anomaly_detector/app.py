@@ -34,7 +34,24 @@ kafka_init()
 
 
 def get_anomalies(anomaly_type):
-    return [], 200
+    if anomaly_type != 'TooLow' and anomaly_type != 'TooHigh':
+        LOGGER.debug("Invalid Anomalytype - return status 400")
+        return {"message": "invalid anomaly"}, 400
+    try:
+        with Session(engine) as session:
+            data = session.query(Anomaly).filter(
+                Anomaly.anomaly_type == str(anomaly_type)).all()
+            res = [d.to_dict() for d in data]
+            print(res)
+
+        if len(res) > 0:
+            LOGGER.debug(f" Anomalies found: {len(res)}-Return status 200")
+            return res, 200
+    except:
+        LOGGER.error("Internal error")
+
+    LOGGER.debug("No anomalies - return status 404")
+    return {"message": "no anomalies"}, 404
 
 
 def write_message(msg):
@@ -89,9 +106,9 @@ def process_messages():
                 LOGGER.error(
                     "Message is not of type job_application or job_create")
             consumer.commit_offsets()
-        except:
+        except Exception as e:
             pass
-            LOGGER.error(f"Error writing data to mysql lite")
+            LOGGER.error(f"Error writing data to mysql lite: {e}")
 
 
 app = FlaskApp(__name__, specification_dir='')
