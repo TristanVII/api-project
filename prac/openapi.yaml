@@ -25,7 +25,11 @@ paths:
           description: Success
           content:
             application/json:
-              schema: {}
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
         '400':
           description: Invalid request
           content:
