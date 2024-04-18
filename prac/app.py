@@ -13,7 +13,7 @@ CONFIG = load_app_conf()
 
 
 def mock_get(idx):
-    return {"response": idx}, 201
+    return {"response": int(idx)}, 201
 
 
 def mock_post(body):
