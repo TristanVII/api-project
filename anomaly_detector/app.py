@@ -1,7 +1,7 @@
 import time
 import connexion
 import requests
-from datetime import datetime
+import datetime
 import json
 from connexion.middleware import MiddlewarePosition
 from starlette.middleware.cors import CORSMiddleware
@@ -62,6 +62,7 @@ def write_message(msg):
         event_type=str(msg['event_type']),
         anomaly_type=str(msg['anomaly_type']),
         description=str(msg['description']),
+        date_created=datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     )
     LOGGER.info(
         f"Event: {event.event_id} - {event.trace_id} - {event.date}")

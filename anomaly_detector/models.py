@@ -20,9 +20,6 @@ class Anomaly(Base):
     description: Mapped[String] = mapped_column(String(250), nullable=False)
     date_created: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
 
-    def __init__(self):
-        self.date_created = datetime.datetime.now()
-
     def to_dict(self):
         """ Dictionary Representation of an anomaly """
         dict = {}
