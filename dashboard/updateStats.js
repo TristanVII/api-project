@@ -134,7 +134,7 @@ const updateLogs = (index) => {
 };
 
 const updateAnomaliesTooHigh = () => {
-  fetch(`ANOMALY_URL?anomaly_type=TooHigh`)
+  fetch(`${ANOMALY_URL}?anomaly_type=TooHigh`)
     .then((res) => res.json())
     .then((result) => {
       const elem = document.getElementById(`event-anomaly`);
@@ -148,7 +148,7 @@ const updateAnomaliesTooHigh = () => {
 };
 
 const updateAnomaliesTooLow = () => {
-  fetch(`ANOMALY_URL?anomaly_type=TooLow`)
+  fetch(`${ANOMALY_URL}?anomaly_type=TooLow`)
     .then((res) => res.json())
     .then((result) => {
       const elem = document.getElementById(`event-anomaly`);
