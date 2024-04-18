@@ -88,12 +88,13 @@ def process_messages():
         LOGGER.info(f"received msg {msg}")
 
         try:
-            if msg['type'] == 'job_application':
+            type = msg['type']
+            if type == 'job_application':
                 LOGGER.info('Processing job_application')
                 msg = msg["payload"]
                 if int(msg['age']) > int(AGE_THRESHOLD):
                     event = {"event_id": msg['job_application_id'], "trace_id": msg['trace_id'],
-                             'event_type': msg['type'], 'anomaly_type': 'TooHigh', 'description': f'Age: {msg["age"]} is above treshold of {AGE_THRESHOLD}'}
+                             'event_type': type, 'anomaly_type': 'TooHigh', 'description': f'Age: {msg["age"]} is above treshold of {AGE_THRESHOLD}'}
                     write_message(event)
 
             elif msg['type'] == 'job_create':
@@ -101,7 +102,7 @@ def process_messages():
                 msg = msg["payload"]
                 if int(msg['salary']) < int(SALARY_THRESHOLD):
                     event = {"event_id": msg['job_listing_id'], "trace_id": msg['trace_id'],
-                             'event_type': msg['type'], 'anomaly_type': 'TooLow', 'description': f'Age: {msg["salary"]} is below treshold of {SALARY_THRESHOLD}'}
+                             'event_type': type, 'anomaly_type': 'TooLow', 'description': f'Age: {msg["salary"]} is below treshold of {SALARY_THRESHOLD}'}
                     write_message(event)
             else:
                 LOGGER.error(
