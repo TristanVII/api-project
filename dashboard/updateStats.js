@@ -151,7 +151,7 @@ const updateAnomaliesTooLow = () => {
   fetch(`${ANOMALY_URL}?anomaly_type=TooLow`)
     .then((res) => res.json())
     .then((result) => {
-      const elem = document.getElementById(`event-anomaly`);
+      const elem = document.getElementById(`event-anomaly-low`);
       elem.innerHTML = `<h5>TooLow</h5>`;
       for (const [key, value] of Object.entries(result)) {
         const pElm = document.createElement("p");
