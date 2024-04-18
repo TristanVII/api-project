@@ -62,7 +62,7 @@ def write_message(msg):
         event_type=str(msg['event_type']),
         anomaly_type=str(msg['anomaly_type']),
         description=str(msg['description']),
-        date_created=datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+        date_created=datetime.now()
     )
     LOGGER.info(
         f"Event: {event.event_id} - {event.trace_id} - {event.date_created}")
