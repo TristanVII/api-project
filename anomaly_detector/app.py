@@ -65,7 +65,7 @@ def write_message(msg):
         date_created=datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     )
     LOGGER.info(
-        f"Event: {event.event_id} - {event.trace_id} - {event.date}")
+        f"Event: {event.event_id} - {event.trace_id} - {event.date_created}")
     with Session(engine) as session:
         session.add(event)
         session.commit()
