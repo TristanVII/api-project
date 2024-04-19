@@ -139,7 +139,8 @@ const updateAnomaliesTooHigh = () => {
     .then((result) => {
       const elem = document.getElementById(`event-anomaly`);
       elem.innerHTML = `<h5>TooHigh</h5>`;
-      for (const entry in result) {
+      for (let i = 0; i < 1; i++) {
+        const entry = result[i];
         console.log(entry);
         const pElm = document.createElement("p");
         pElm.innerHTML = `<strong>EventID: ${entry["event_id"]}:</strong>`;
@@ -157,7 +158,8 @@ const updateAnomaliesTooLow = () => {
     .then((result) => {
       const elem = document.getElementById(`event-anomaly-low`);
       elem.innerHTML = `<h5>TooLow</h5>`;
-      for (const entry in result) {
+      for (let i = 0; i < 1; i++) {
+        const entry = result[i];
         console.log(entry);
         const pElm = document.createElement("p");
         pElm.innerHTML = `<strong>EventID: ${entry["event_id"]}:</strong>`;
