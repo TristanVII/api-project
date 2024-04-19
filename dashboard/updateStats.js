@@ -162,9 +162,7 @@ const updateAnomaliesTooLow = () => {
         const entry = result[i];
         console.log(entry);
         const pElm = document.createElement("p");
-        pElm.innerHTML = `<strong>EventID: ${entry["event_id"]}:</strong>`;
-        pElm.innerHTML = `<strong>Event Type: ${entry["event_type"]}:</strong>`;
-        pElm.innerHTML = `<strong>Description: ${entry["event_type"]}:</strong>`;
+        pElm.innerHTML = `<pre>Description: ${entry}:</pre>`;
         elem.appendChild(pElm);
         break;
       }
