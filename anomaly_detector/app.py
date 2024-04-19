@@ -24,6 +24,9 @@ SALARY_THRESHOLD = CONFIG['SALARY_THRESHOLD']
 AGE_THRESHOLD = CONFIG['AGE_THRESHOLD']
 kafka = None
 
+LOGGER.info(
+    f'USING {SALARY_THRESHOLD} salary treshold and {AGE_THRESHOLD} age treshold')
+
 
 def kafka_init():
     global kafka
@@ -57,7 +60,6 @@ def get_anomalies(anomaly_type):
 
 def write_message(msg):
     """ Write event to mysqlite"""
-    LOGGER.debug(f"RECEIVED MSG: {msg}")
     event = Anomaly(
         event_id=str(msg['event_id']),
         trace_id=str(msg['trace_id']),
@@ -86,7 +88,6 @@ def process_messages():
     for msg in consumer:
         msg_str = msg.value.decode('utf-8')
         msg = json.loads(msg_str)
-        LOGGER.info(f"received msg {msg}")
 
         try:
             type = msg['type']
