@@ -143,7 +143,7 @@ const updateAnomaliesTooHigh = () => {
         const entry = result[i];
         console.log(entry);
         const pElm = document.createElement("p");
-        pElm.innerHTML = `<pre>Description: ${str(entry)}:</pre>`;
+        pElm.innerHTML = `<pre>Description: ${Object.toString(entry)}:</pre>`;
         elem.appendChild(pElm);
         break;
       }
@@ -160,7 +160,7 @@ const updateAnomaliesTooLow = () => {
         const entry = result[i];
         console.log(entry);
         const pElm = document.createElement("p");
-        pElm.innerHTML = `<pre>Description: ${str(entry)}:</pre>`;
+        pElm.innerHTML = `<pre>Description: ${Object.toString(entry)}:</pre>`;
         elem.appendChild(pElm);
         break;
       }
