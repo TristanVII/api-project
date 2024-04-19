@@ -139,9 +139,11 @@ const updateAnomaliesTooHigh = () => {
     .then((result) => {
       const elem = document.getElementById(`event-anomaly`);
       elem.innerHTML = `<h5>TooHigh</h5>`;
-      for (const [key, value] of Object.entries(result)) {
+      for (const entry in result) {
         const pElm = document.createElement("p");
-        pElm.innerHTML = `<strong>${key}:</strong> ${value}`;
+        pElm.innerHTML = `<strong>EventID: ${entry["event_id"]}:</strong>`;
+        pElm.innerHTML = `<strong>Event Type: ${entry["event_type"]}:</strong>`;
+        pElm.innerHTML = `<strong>Description: ${entry["event_type"]}:</strong>`;
         elem.appendChild(pElm);
         break;
       }
@@ -154,9 +156,11 @@ const updateAnomaliesTooLow = () => {
     .then((result) => {
       const elem = document.getElementById(`event-anomaly-low`);
       elem.innerHTML = `<h5>TooLow</h5>`;
-      for (const [key, value] of Object.entries(result)) {
+      for (const entry in result) {
         const pElm = document.createElement("p");
-        pElm.innerHTML = `<strong>${key}:</strong> ${value}`;
+        pElm.innerHTML = `<strong>EventID: ${entry["event_id"]}:</strong>`;
+        pElm.innerHTML = `<strong>Event Type: ${entry["event_type"]}:</strong>`;
+        pElm.innerHTML = `<strong>Description: ${entry["event_type"]}:</strong>`;
         elem.appendChild(pElm);
         break;
       }
